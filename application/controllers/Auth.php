@@ -3,14 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Auth extends CI_Controller
 {
-    // Define an array of allowed domains instead of a single string
+    // Define an array of allowed domains
     private $allowed_domains = ['westminster.ac.uk', 'gmail.com'];
 
     public function __construct()
     {
         parent::__construct();
         
-        // --- Security Headers (Helmet.js Equivalent) ---
+        // Security Headers 
         $this->output->set_header('X-Content-Type-Options: nosniff');
         $this->output->set_header('X-Frame-Options: SAMEORIGIN');
         $this->output->set_header('X-XSS-Protection: 1; mode=block');
@@ -45,7 +45,7 @@ class Auth extends CI_Controller
             if ($this->form_validation->run() === TRUE) {
                 $email = strtolower(trim($this->input->post('email', TRUE)));
 
-                // Define Bcrypt options for explicit salt rounds (cost)
+                // Define Bcrypt options 
                 $options = [
                     'cost' => 12,
                 ];
@@ -53,7 +53,7 @@ class Auth extends CI_Controller
                 $userData = [
                     'first_name'       => trim($this->input->post('first_name', TRUE)),
                     'last_name'        => trim($this->input->post('last_name', TRUE)),
-                    'university_email' => $email, // Storing the email (even if it's a gmail)
+                    'university_email' => $email, 
                     'password_hash'    => password_hash($this->input->post('password'), PASSWORD_BCRYPT, $options), 
                     'role'             => 'alumnus',
                     'email_verified'   => 0,
@@ -145,7 +145,7 @@ class Auth extends CI_Controller
 
     public function login()
     {
-        // --- Basic Rate Limiting (Check Lockout) ---
+        //  Basic Rate Limiting (Check Lockout) ---
         $login_attempts = $this->session->userdata('login_attempts') ?: 0;
         $lockout_time = $this->session->userdata('lockout_time') ?: 0;
 
@@ -156,7 +156,6 @@ class Auth extends CI_Controller
             $this->load->view('auth/login', $data);
             return;
         }
-        // -------------------------------------------
 
         $data['title'] = 'Login';
 
@@ -172,18 +171,17 @@ class Auth extends CI_Controller
 
                 if (!$user || !password_verify($password, $user->password_hash)) {
                     
-                    // --- Rate Limiting (Increment Attempts) ---
+                    // Rate Limiting
                     $login_attempts++;
                     $this->session->set_userdata('login_attempts', $login_attempts);
                     
-                    if ($login_attempts >= 5) { // Lockout after 5 attempts
-                        $this->session->set_userdata('lockout_time', time() + 300); // 5 minutes lockout
+                    if ($login_attempts >= 5) { 
+                        $this->session->set_userdata('lockout_time', time() + 300); 
                         $data['error_message'] = 'Too many failed attempts. You are locked out for 5 minutes.';
                     } else {
                         $attempts_left = 5 - $login_attempts;
                         $data['error_message'] = 'Invalid email or password. You have ' . $attempts_left . ' attempt(s) left.';
                     }
-                    // ------------------------------------------
 
                     $this->load->view('auth/login', $data);
                     return;
@@ -195,7 +193,7 @@ class Auth extends CI_Controller
                     return;
                 }
 
-                // --- Rate Limiting (Reset on Success) ---
+                // Rate Limiting 
                 $this->session->unset_userdata('login_attempts');
                 $this->session->unset_userdata('lockout_time');
                 // ----------------------------------------
@@ -248,7 +246,7 @@ class Auth extends CI_Controller
     private function check_session_timeout()
     {
         $lastActivity = $this->session->userdata('last_activity');
-        $timeoutSeconds = 7200; // 2 hours
+        $timeoutSeconds = 7200; 
 
         if ($lastActivity && (time() - $lastActivity > $timeoutSeconds)) {
             $this->session->sess_destroy();
@@ -319,7 +317,7 @@ class Auth extends CI_Controller
             $this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|trim|matches[password]');
 
             if ($this->form_validation->run() === TRUE) {
-                // Define Bcrypt options for explicit salt rounds (cost)
+                // Define Bcrypt 
                 $options = [
                     'cost' => 12,
                 ];
