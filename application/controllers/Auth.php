@@ -31,6 +31,10 @@ class Auth extends CI_Controller
             $this->form_validation->set_rules('first_name', 'First Name', 'required|trim|min_length[2]|max_length[100]|xss_clean');
             $this->form_validation->set_rules('last_name', 'Last Name', 'required|trim|min_length[2]|max_length[100]|xss_clean');
             $this->form_validation->set_rules('email', 'Email Address', 'required|trim|valid_email|xss_clean|callback_email_domain_check|callback_email_not_exists');
+            
+            // NEW REVISION: Validate role (either alumnus or developer)
+            $this->form_validation->set_rules('role', 'Account Role', 'trim|in_list[alumnus,developer]');
+
             $this->form_validation->set_rules(
                 'password',
                 'Password',
@@ -44,6 +48,12 @@ class Auth extends CI_Controller
 
             if ($this->form_validation->run() === TRUE) {
                 $email = strtolower(trim($this->input->post('email', TRUE)));
+                
+                // NEW REVISION: Handle role assignment safely
+                $assigned_role = $this->input->post('role', TRUE);
+                if (!in_array($assigned_role, ['alumnus', 'developer'])) {
+                    $assigned_role = 'alumnus'; // Default safety fallback
+                }
 
                 // Define Bcrypt options 
                 $options = [
@@ -55,7 +65,7 @@ class Auth extends CI_Controller
                     'last_name'        => trim($this->input->post('last_name', TRUE)),
                     'university_email' => $email, 
                     'password_hash'    => password_hash($this->input->post('password'), PASSWORD_BCRYPT, $options), 
-                    'role'             => 'alumnus',
+                    'role'             => $assigned_role, // Using the dynamic role
                     'email_verified'   => 0,
                     'is_active'        => 1
                 ];
@@ -212,8 +222,12 @@ class Auth extends CI_Controller
                 $this->session->sess_regenerate(TRUE);
                 $this->User_model->update_last_login($user->id);
 
-                // Redirect to dashboard upon successful login
-                redirect('auth/dashboard');
+                // NEW REVISION: Smart Routing based on the user's role
+                if ($user->role === 'developer') {
+                    redirect('developer/index');
+                } else {
+                    redirect('auth/dashboard'); 
+                }
                 return;
             }
         }

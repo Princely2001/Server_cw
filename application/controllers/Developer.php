@@ -10,6 +10,13 @@ class Developer extends CI_Controller {
         if (!$this->session->userdata('logged_in')) {
             redirect('auth/login');
         }
+
+        // NEW REVISION: STRICT ACCESS CONTROL
+        // Only allow access if the user's role is 'developer'
+        if ($this->session->userdata('role') !== 'developer') {
+            show_error('Forbidden: This section is restricted to Developers only.', 403);
+            exit;
+        }
         
         $this->load->model('Api_model');
         $this->load->helper(['form', 'url', 'security']);

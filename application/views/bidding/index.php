@@ -265,7 +265,7 @@
                     Bid to be featured as the <strong>Alumni of the Day</strong> for:
                     <span class="target-date"><?= date('l, jS F Y', strtotime($target_date)) ?></span>
                 </p>
-                <a class="featured-link" href="<?= site_url('featured-today') ?>">View today's featured alumnus</a>
+                <a class="featured-link" href="<?= site_url('bidding/featured_today') ?>">View today's featured alumnus</a>
             </div>
 
             <?php if ($this->session->flashdata('success')): ?>
@@ -300,7 +300,7 @@
             ?>
 
             <div class="status-box <?= $status_class ?>">
-                Current Status: <?= html_escape($current_status) ?>
+                Current Status: <strong><?= html_escape($current_status) ?></strong>
                 <?php if ($my_bid): ?>
                     <small>Your current bid: £<?= number_format((float)$my_bid->bid_amount, 2) ?></small>
                 <?php else: ?>

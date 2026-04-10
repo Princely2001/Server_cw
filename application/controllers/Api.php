@@ -9,6 +9,8 @@ class Api extends CI_Controller {
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
         header('Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With');
+        
+        // This sets the default content type to JSON for the entire controller
         header('Content-Type: application/json');
 
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -18,6 +20,10 @@ class Api extends CI_Controller {
 
         $this->load->model('Api_model');
         $this->load->model('Bidding_model');
+        
+        // Load the session library and URL helper so we can use them in the docs() method
+        $this->load->library('session');
+        $this->load->helper('url');
     }
 
     private function output_json($data, $status_code = 200) {
@@ -27,6 +33,7 @@ class Api extends CI_Controller {
             ->set_output(json_encode($data));
     }
 
+    // This endpoint remains accessible to clients via Bearer Token
     public function alumni_of_the_day() {
         $ip_address = $this->input->ip_address();
         
@@ -101,8 +108,26 @@ class Api extends CI_Controller {
         ], 200);
     }
      
+    // This section is strictly locked down to developers
     public function docs() {
-        header('Content-Type: text/html'); 
+        // OVERRIDE JSON HEADER: Force the browser to read this specific method as HTML 
+        // We do this BEFORE the security checks so that show_error() renders correctly.
+        header('Content-Type: text/html');
+        $this->output->set_content_type('text/html');
+
+        // STRICT ACCESS CONTROL: Require login
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth/login');
+            exit;
+        }
+
+        // STRICT ACCESS CONTROL: Only allow developers
+        if ($this->session->userdata('role') !== 'developer') {
+            show_error('Forbidden: API Documentation and testing is restricted to Developers only.', 403);
+            exit;
+        }
+
+        // Load the Swagger/API Docs view if they pass the checks
         $this->load->view('api/docs');
     }
 }

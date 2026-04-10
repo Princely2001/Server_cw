@@ -174,7 +174,7 @@ class Bidding extends CI_Controller {
             return;
         }
 
-        $existing_bid = $this->Bidding_model->get_bid_including_cancelled($user_id, $target_date);
+        $existing_bid = $this->Bidding_model->get_user_bid($user_id, $target_date);
         $bid_successful = false;
         $action_label = 'placed';
 
@@ -185,32 +185,23 @@ class Bidding extends CI_Controller {
                 return;
             }
 
-            if ($existing_bid->status === 'cancelled') {
-                $bid_successful = $this->Bidding_model->reactivate_cancelled_bid($existing_bid->id, $new_amount);
-                $action_label = 're-placed';
+            // Bid is pending - enforce increase-only rule
+            if ($new_amount <= (float) $existing_bid->bid_amount) {
+                $this->session->set_flashdata('error', 'You can only update your bid to a higher amount.');
+                redirect('bidding');
+                return;
+            }
 
-                if ($bid_successful) {
-                    $this->session->set_flashdata('success', 'Bid placed successfully.');
-                } else {
-                    $this->session->set_flashdata('error', 'Bid placement failed. Please try again.');
-                }
+            $bid_successful = $this->Bidding_model->update_bid($existing_bid->id, $new_amount);
+            $action_label = 'updated';
+
+            if ($bid_successful) {
+                $this->session->set_flashdata('success', 'Bid updated successfully.');
             } else {
-                if ($new_amount <= (float) $existing_bid->bid_amount) {
-                    $this->session->set_flashdata('error', 'You can only update your bid to a higher amount.');
-                    redirect('bidding');
-                    return;
-                }
-
-                $bid_successful = $this->Bidding_model->update_bid($existing_bid->id, $new_amount);
-                $action_label = 'updated';
-
-                if ($bid_successful) {
-                    $this->session->set_flashdata('success', 'Bid updated successfully.');
-                } else {
-                    $this->session->set_flashdata('error', 'Bid update failed. Please try again with a higher amount.');
-                }
+                $this->session->set_flashdata('error', 'Bid update failed. Please try again with a higher amount.');
             }
         } else {
+            // No existing bid, place a new one
             $insert_id = $this->Bidding_model->place_bid([
                 'user_id' => $user_id,
                 'bid_amount' => $new_amount,
@@ -241,36 +232,6 @@ class Bidding extends CI_Controller {
                  <p>The system only shows whether you are currently winning or losing.</p>'
             );
             $this->email->send();
-        }
-
-        redirect('bidding');
-    }
-
-    public function cancel_bid() {
-        $this->require_alumnus();
-
-        if ($this->input->method(TRUE) !== 'POST') {
-            show_error('Method Not Allowed', 405);
-            return;
-        }
-
-        $user_id = (int) $this->session->userdata('user_id');
-        $target_date = $this->tomorrow_colombo();
-
-        $existing_bid = $this->Bidding_model->get_user_bid($user_id, $target_date);
-
-        if (!$existing_bid || $existing_bid->status !== 'pending') {
-            $this->session->set_flashdata('error', 'No pending bid found to cancel or the round is already resolved.');
-            redirect('bidding');
-            return;
-        }
-
-        $updated = $this->Bidding_model->cancel_bid($existing_bid->id, $this->now_datetime_colombo());
-
-        if ($updated) {
-            $this->session->set_flashdata('success', 'Your bid has been successfully canceled.');
-        } else {
-            $this->session->set_flashdata('error', 'Failed to cancel the bid.');
         }
 
         redirect('bidding');

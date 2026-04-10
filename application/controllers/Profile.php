@@ -18,6 +18,13 @@ class Profile extends CI_Controller {
         if (!$this->session->userdata('logged_in')) {
             redirect('auth/login');
         }
+
+        // NEW REVISION: STRICT ACCESS CONTROL
+        // Only allow access if the user's role is 'alumnus'
+        if ($this->session->userdata('role') !== 'alumnus') {
+            show_error('Forbidden: This section is restricted to Alumni users only.', 403);
+            exit;
+        }
         
         // Load required models, helpers, and libraries
         $this->load->model('Profile_model');

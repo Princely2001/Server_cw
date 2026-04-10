@@ -375,7 +375,7 @@ class Bidding_model extends CI_Model {
     }
     
     public function get_todays_winner() {
-        $today = (new DateTime('now', new DateTimeZone($this->app_timezone)))->format('Y-m-d');
+        $today = (new DateTime('now', new DateTimeZone('Asia/Colombo')))->format('Y-m-d');
         return $this->get_resolved_winner_with_user($today);
     }
 

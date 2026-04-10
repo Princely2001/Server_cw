@@ -19,9 +19,9 @@ $route['bidding'] = 'bidding/index';
 $route['bidding/submit'] = 'bidding/submit_bid';
 $route['bidding/my-status'] = 'bidding/my_bid_status';
 $route['featured-today'] = 'bidding/featured_today';
+$route['api-docs'] = 'api/docs';
 
-// Public Developer API
-$route['api/featured-today'] = 'bidding/get_todays_winner';
-
-// Cron Route
+// The actual JSON endpoint returning the winner data
+$route['api/featured-today'] = 'api/alumni_of_the_day'; 
+// cron routes
 $route['cron/resolve-winner'] = 'bidding/cron_resolve_winner';

@@ -254,9 +254,11 @@
             color: #e2e8f0;
         }
 
+        /* Updated CSS block to include select tag */
         input[type="text"],
         input[type="email"],
-        input[type="password"] {
+        input[type="password"],
+        select {
             width: 100%;
             padding: 15px 16px;
             border-radius: 16px;
@@ -266,6 +268,13 @@
             outline: none;
             font-size: 0.98rem;
             transition: 0.25s ease;
+            font-family: inherit;
+        }
+        
+        /* Dropdown specific styles */
+        select option {
+            background: var(--bg-2);
+            color: white;
         }
 
         input[type="text"]::placeholder,
@@ -274,9 +283,11 @@
             color: #94a3b8;
         }
 
+        /* Updated hover/focus block to include select tag */
         input[type="text"]:focus,
         input[type="email"]:focus,
-        input[type="password"]:focus {
+        input[type="password"]:focus,
+        select:focus {
             border-color: rgba(99,102,241,0.75);
             box-shadow: 0 0 0 4px rgba(99,102,241,0.16);
             background: rgba(255,255,255,0.08);
@@ -465,6 +476,14 @@
                                 value="<?= set_value('email'); ?>"
                                 required
                             >
+                        </div>
+
+                        <div class="field full">
+                            <label for="role">Account Type</label>
+                            <select name="role" id="role" required>
+                                <option value="alumnus" <?= set_select('role', 'alumnus', TRUE); ?>>Alumnus User</option>
+                                <option value="developer" <?= set_select('role', 'developer'); ?>>API Developer</option>
+                            </select>
                         </div>
 
                         <div class="field full">
