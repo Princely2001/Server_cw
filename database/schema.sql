@@ -18,10 +18,8 @@ DROP TABLE IF EXISTS email_verification_tokens;
 DROP TABLE IF EXISTS users;
 
 SET FOREIGN_KEY_CHECKS = 1;
+-- CORE AUTHENTICATION TABLES
 
--- ==========================================
--- 1. CORE AUTHENTICATION TABLES
--- ==========================================
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     university_email VARCHAR(255) NOT NULL UNIQUE,
@@ -61,9 +59,9 @@ CREATE TABLE password_reset_tokens (
         ON DELETE CASCADE
 );
 
--- ==========================================
--- 2. ALUMNI PROFILE MANAGEMENT TABLES
--- ==========================================
+
+--  ALUMNI PROFILE MANAGEMENT TABLES
+
 CREATE TABLE alumni_profiles (
     user_id INT PRIMARY KEY,
     bio TEXT,
@@ -121,9 +119,9 @@ CREATE TABLE alumni_employment (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- ==========================================
--- 3. BIDDING TABLES
--- ==========================================
+
+ BIDDING TABLES
+
 CREATE TABLE alumni_bids (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -150,9 +148,9 @@ CREATE TABLE alumni_monthly_limits (
     CONSTRAINT uq_monthly_limit_user_period UNIQUE (user_id, win_month, win_year)
 );
 
--- ==========================================
--- 4. API KEY MANAGEMENT & SECURITY TABLES
--- ==========================================
+
+-- API KEY MANAGEMENT & SECURITY TABLES
+
 CREATE TABLE api_keys (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -170,10 +168,8 @@ CREATE TABLE api_logs (
     accessed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (api_key_id) REFERENCES api_keys(id) ON DELETE CASCADE
 );
+-- OPTIMIZATION INDEXES
 
--- ==========================================
--- 5. OPTIMIZATION INDEXES
--- ==========================================
 CREATE INDEX idx_users_email ON users(university_email);
 CREATE INDEX idx_email_verification_user ON email_verification_tokens(user_id);
 CREATE INDEX idx_password_reset_user ON password_reset_tokens(user_id);

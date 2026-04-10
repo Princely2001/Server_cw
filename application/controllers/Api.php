@@ -73,7 +73,7 @@ class Api extends CI_Controller {
 
         $this->Api_model->log_request($key_record->id, 'GET /api/alumni_of_the_day', $ip_address);
 
-        // Fetch Today's Winner (Safely using existing structure in Bidding Model)
+        // Fetch Today's Winner 
         $today = (new DateTime('now', new DateTimeZone('Asia/Colombo')))->format('Y-m-d');
         $featured = $this->Bidding_model->get_full_featured_profile_by_date($today);
 
@@ -110,8 +110,7 @@ class Api extends CI_Controller {
      
     // This section is strictly locked down to developers
     public function docs() {
-        // OVERRIDE JSON HEADER: Force the browser to read this specific method as HTML 
-        // We do this BEFORE the security checks so that show_error() renders correctly.
+        
         header('Content-Type: text/html');
         $this->output->set_content_type('text/html');
 
@@ -127,7 +126,7 @@ class Api extends CI_Controller {
             exit;
         }
 
-        // Load the Swagger/API Docs view if they pass the checks
+      
         $this->load->view('api/docs');
     }
 }
