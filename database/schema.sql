@@ -2,23 +2,8 @@ CREATE DATABASE IF NOT EXISTS alumni_db;
 USE alumni_db;
 
 SET FOREIGN_KEY_CHECKS = 0;
-
-DROP TABLE IF EXISTS api_logs;
-DROP TABLE IF EXISTS api_keys;
-DROP TABLE IF EXISTS alumni_monthly_limits;
-DROP TABLE IF EXISTS alumni_bids;
-DROP TABLE IF EXISTS alumni_employment;
-DROP TABLE IF EXISTS alumni_courses;
-DROP TABLE IF EXISTS alumni_licences;
-DROP TABLE IF EXISTS alumni_certifications;
-DROP TABLE IF EXISTS alumni_degrees;
-DROP TABLE IF EXISTS alumni_profiles;
-DROP TABLE IF EXISTS password_reset_tokens;
-DROP TABLE IF EXISTS email_verification_tokens;
-DROP TABLE IF EXISTS users;
-
 SET FOREIGN_KEY_CHECKS = 1;
--- CORE AUTHENTICATION TABLES
+
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -60,7 +45,7 @@ CREATE TABLE password_reset_tokens (
 );
 
 
---  ALUMNI PROFILE MANAGEMENT TABLES
+ALUMNI PROFILE MANAGEMENT TABLES
 
 CREATE TABLE alumni_profiles (
     user_id INT PRIMARY KEY,
@@ -114,11 +99,11 @@ CREATE TABLE alumni_employment (
     user_id INT NOT NULL,
     company_name VARCHAR(150) NOT NULL,
     role VARCHAR(100) NOT NULL,
+    industry_sector VARCHAR(100) NULL, -- NEW COLUMN FOR CW2 ANALYTICS
     start_date DATE NOT NULL,
     end_date DATE NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
-
 
  BIDDING TABLES
 
@@ -148,14 +133,15 @@ CREATE TABLE alumni_monthly_limits (
     CONSTRAINT uq_monthly_limit_user_period UNIQUE (user_id, win_month, win_year)
 );
 
-
--- API KEY MANAGEMENT & SECURITY TABLES
+API KEY MANAGEMENT & SECURITY TABLES
 
 CREATE TABLE api_keys (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
+    client_name VARCHAR(100) NOT NULL,
     api_key VARCHAR(64) NOT NULL UNIQUE,
     status ENUM('active', 'revoked') DEFAULT 'active',
+    permissions JSON NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
@@ -168,7 +154,7 @@ CREATE TABLE api_logs (
     accessed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (api_key_id) REFERENCES api_keys(id) ON DELETE CASCADE
 );
--- OPTIMIZATION INDEXES
+OPTIMIZATION INDEXES
 
 CREATE INDEX idx_users_email ON users(university_email);
 CREATE INDEX idx_email_verification_user ON email_verification_tokens(user_id);

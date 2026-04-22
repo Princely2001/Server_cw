@@ -358,12 +358,23 @@ class Bidding_model extends CI_Model {
                         ->result();
     }
 
+    // Decoding JSON permissions
+
     public function get_active_api_key($api_key) {
-        return $this->db->where('api_key', $api_key)
+        $key_record = $this->db->where('api_key', $api_key)
                         ->where('status', 'active')
                         ->limit(1)
                         ->get($this->api_keys_table)
                         ->row();
+
+        // Decode the JSON permissions string into a PHP array
+        if ($key_record && !empty($key_record->permissions)) {
+            $key_record->permissions = json_decode($key_record->permissions, TRUE);
+        } else if ($key_record) {
+            $key_record->permissions = []; // Default to empty array if null
+        }
+
+        return $key_record;
     }
 
     public function log_api_access($api_key_id, $endpoint, $ip_address) {

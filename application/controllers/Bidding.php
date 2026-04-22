@@ -63,7 +63,9 @@ class Bidding extends CI_Controller {
         return $this->now_colombo()->format('Y-m-d H:i:s');
     }
 
-    private function require_api_key() {
+
+    // Enhanced require_api_key with Scope Authorization
+    private function require_api_key($required_scope = null) {
         $auth_header = $this->input->get_request_header('Authorization', TRUE);
         $api_key = null;
 
@@ -87,6 +89,24 @@ class Bidding extends CI_Controller {
             exit;
         }
 
+        // Check if the key has the required permission
+        if ($required_scope !== null) {
+            $permissions = isset($key_record->permissions) && is_array($key_record->permissions) 
+                           ? $key_record->permissions 
+                           : [];
+            if (!in_array($required_scope, $permissions)) {
+                $this->Bidding_model->log_api_access(
+                    (int) $key_record->id,
+                    uri_string() . ' [BLOCKED: Missing ' . $required_scope . ']',
+                    $this->input->ip_address()
+                );
+                
+                $this->json_response(['error' => "Forbidden: Your API key lacks the '{$required_scope}' permission."], 403);
+                exit;
+            }
+        }
+
+        // Log successful access
         $this->Bidding_model->log_api_access(
             (int) $key_record->id,
             uri_string(),
@@ -95,6 +115,7 @@ class Bidding extends CI_Controller {
 
         return $key_record;
     }
+
 
     public function index() {
         $this->require_alumnus();
@@ -295,7 +316,6 @@ class Bidding extends CI_Controller {
 
         $today = $this->today_colombo();
 
-        // Loop through ALL un-resolved dates up to today to handle server restarts/missed crons safely.
         $pending_rounds = $this->db->select('target_date')
                                   ->from('alumni_bids')
                                   ->where('status', 'pending')
