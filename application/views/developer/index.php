@@ -17,17 +17,9 @@
         body {
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(-45deg, #0f172a, #1e293b, #2563eb, #0f766e);
-            background-size: 400% 400%;
-            animation: gradientBG 14s ease infinite;
+            background: #0f172a;
             color: #fff;
             padding: 30px 15px;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         .dashboard-wrapper {
@@ -42,18 +34,6 @@
             gap: 15px;
             margin-bottom: 25px;
             flex-wrap: wrap;
-            animation: fadeDown 0.8s ease;
-        }
-
-        @keyframes fadeDown {
-            from {
-                opacity: 0;
-                transform: translateY(-25px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .dashboard-title {
@@ -76,7 +56,6 @@
             padding: 12px 18px;
             border-radius: 12px;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
             font-weight: 600;
         }
 
@@ -91,22 +70,8 @@
             border: 1px solid rgba(255,255,255,0.14);
             box-shadow: 0 12px 40px rgba(0,0,0,0.25);
             border-radius: 22px;
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
             overflow: hidden;
             margin-bottom: 25px;
-            animation: fadeUp 0.9s ease;
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(35px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .card-inner {
@@ -159,7 +124,6 @@
             padding: 14px 18px;
             margin-bottom: 18px;
             font-weight: 600;
-            animation: fadeDown 0.6s ease;
         }
 
         .alert-success-modern {
@@ -172,6 +136,23 @@
             background: rgba(239, 68, 68, 0.18);
             color: #fee2e2;
             border-left: 4px solid #ef4444;
+        }
+
+        .alert-warning-modern {
+            background: rgba(245, 158, 11, 0.20);
+            color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .new-key-box {
+            background: rgba(0,0,0,0.28);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 14px;
+            padding: 14px;
+            margin-top: 10px;
+            word-break: break-all;
+            font-family: monospace;
+            color: #fef9c3;
         }
 
         .table-responsive {
@@ -207,13 +188,8 @@
             vertical-align: middle;
         }
 
-        .modern-table tbody tr {
-            transition: all 0.3s ease;
-        }
-
         .modern-table tbody tr:hover {
             background: rgba(255,255,255,0.06);
-            transform: scale(1.003);
         }
 
         .badge-modern {
@@ -224,13 +200,6 @@
             font-weight: 700;
             letter-spacing: 0.4px;
             text-transform: uppercase;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.04); }
-            100% { transform: scale(1); }
         }
 
         .badge-active {
@@ -293,35 +262,6 @@
             font-size: 0.9rem;
         }
 
-        .floating-glow {
-            position: fixed;
-            width: 260px;
-            height: 260px;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.18;
-            z-index: -1;
-            animation: floatGlow 10s ease-in-out infinite;
-        }
-
-        .glow-1 {
-            background: #3b82f6;
-            top: 10%;
-            left: 5%;
-        }
-
-        .glow-2 {
-            background: #14b8a6;
-            bottom: 10%;
-            right: 8%;
-            animation-delay: 2s;
-        }
-
-        @keyframes floatGlow {
-            0%, 100% { transform: translateY(0) translateX(0); }
-            50% { transform: translateY(-20px) translateX(15px); }
-        }
-
         @media (max-width: 768px) {
             .dashboard-title {
                 font-size: 1.6rem;
@@ -347,130 +287,180 @@
 </head>
 <body>
 
-    <div class="floating-glow glow-1"></div>
-    <div class="floating-glow glow-2"></div>
+<div class="dashboard-wrapper">
 
-    <div class="dashboard-wrapper">
-
-        <div class="dashboard-header">
-            <div>
-                <div class="dashboard-title"><?= html_escape($title) ?></div>
-                <div class="dashboard-subtitle">Manage your API keys and monitor recent API usage with a modern dashboard</div>
-            </div>
-            <a href="<?= site_url('auth/dashboard') ?>" class="back-link">← Back to Dashboard</a>
-        </div>
-
-        <?php if ($this->session->flashdata('success')): ?>
-            <div class="alert-modern alert-success-modern">
-                <?= html_escape($this->session->flashdata('success')); ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($this->session->flashdata('error')): ?>
-            <div class="alert-modern alert-danger-modern">
-                <?= html_escape($this->session->flashdata('error')); ?>
-            </div>
-        <?php endif; ?>
-
-        <div class="glass-card">
-            <div class="card-inner">
-                <h2 class="section-title">Your API Keys</h2>
-                <p class="section-desc">
-                    Use these keys to authenticate with the Alumni Data API.<br>
-                    Include the key in your request headers as:
-                    <br><span class="code-inline">Authorization: Bearer YOUR_API_KEY</span>
-                </p>
-
-                <?= form_open('developer/generate') ?>
-                    <button type="submit" class="modern-btn">+ Generate New API Key</button>
-                <?= form_close() ?>
-
-                <?php if (!empty($api_keys)): ?>
-                    <div class="table-responsive mt-4">
-                        <table class="modern-table">
-                            <thead>
-                                <tr>
-                                    <th>API Key (Bearer Token)</th>
-                                    <th>Status</th>
-                                    <th>Created At</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach($api_keys as $key): ?>
-                                    <tr>
-                                        <td>
-                                            <span class="key-text"><?= html_escape($key->api_key) ?></span>
-                                        </td>
-                                        <td>
-                                            <?php if ($key->status === 'active'): ?>
-                                                <span class="badge-modern badge-active">Active</span>
-                                            <?php else: ?>
-                                                <span class="badge-modern badge-revoked">Revoked</span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td><?= date('M j, Y h:i A', strtotime($key->created_at)) ?></td>
-                                        <td>
-                                            <?php if ($key->status === 'active'): ?>
-                                                <a 
-                                                    href="<?= site_url('developer/revoke/'.$key->id) ?>" 
-                                                    class="btn-danger-modern"
-                                                    onclick="return confirm('Are you sure you want to revoke this key? Any applications using it will lose access immediately.');"
-                                                >
-                                                    Revoke
-                                                </a>
-                                            <?php else: ?>
-                                                <span class="muted-na">N/A</span>
-                                            <?php endif; ?>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php else: ?>
-                    <p class="empty-text">You haven't generated any API keys yet.</p>
-                <?php endif; ?>
+    <div class="dashboard-header">
+        <div>
+            <div class="dashboard-title"><?= html_escape($title) ?></div>
+            <div class="dashboard-subtitle">
+                Manage API keys, revoke access, and monitor API usage logs.
             </div>
         </div>
 
-        <div class="glass-card">
-            <div class="card-inner">
-                <h2 class="section-title">Recent API Usage Logs</h2>
-                <p class="section-desc">
-                    Track when and how your API keys are being used by third-party clients.
-                </p>
-
-                <?php if (!empty($logs)): ?>
-                    <div class="table-responsive">
-                        <table class="modern-table">
-                            <thead>
-                                <tr>
-                                    <th>Date & Time</th>
-                                    <th>Endpoint Accessed</th>
-                                    <th>IP Address</th>
-                                    <th>Key Used (Prefix)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach($logs as $log): ?>
-                                    <tr>
-                                        <td><?= date('M j, Y h:i:s A', strtotime($log->accessed_at)) ?></td>
-                                        <td><span class="endpoint-code"><?= html_escape($log->endpoint) ?></span></td>
-                                        <td><?= html_escape($log->ip_address) ?></td>
-                                        <td><?= html_escape(substr($log->api_key, 0, 10)) ?>...</td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php else: ?>
-                    <p class="empty-text">No API activity recorded yet.</p>
-                <?php endif; ?>
-            </div>
-        </div>
-
+        <a href="<?= site_url('auth/dashboard') ?>" class="back-link">← Back to Dashboard</a>
     </div>
+
+    <?php if ($this->session->flashdata('success')): ?>
+        <div class="alert-modern alert-success-modern">
+            <?= html_escape($this->session->flashdata('success')); ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($this->session->flashdata('error')): ?>
+        <div class="alert-modern alert-danger-modern">
+            <?= html_escape($this->session->flashdata('error')); ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($new_api_key)): ?>
+        <div class="alert-modern alert-warning-modern">
+            <strong>New API Key Generated</strong>
+            <p class="mb-1 mt-2">
+                Copy this key now. It is shown only once:
+            </p>
+            <div class="new-key-box">
+                <?= html_escape($new_api_key); ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <div class="glass-card">
+        <div class="card-inner">
+            <h2 class="section-title">Your API Keys</h2>
+
+            <p class="section-desc">
+                Use these keys to authenticate with the Alumni Data API.<br>
+                Include the key in your request headers as:
+                <br>
+                <span class="code-inline">Authorization: Bearer YOUR_API_KEY</span>
+            </p>
+
+            <?= form_open('developer/generate') ?>
+                <button type="submit" class="modern-btn">+ Generate New API Key</button>
+            <?= form_close() ?>
+
+            <?php if (!empty($api_keys)): ?>
+                <div class="table-responsive mt-4">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>API Key Preview</th>
+                                <th>Status</th>
+                                <th>Created At</th>
+                                <th>Revoked At</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($api_keys as $key): ?>
+                                <tr>
+                                    <td>
+                                        <span class="key-text">
+                                            <?= html_escape(substr($key->api_key, 0, 12)); ?>...
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <?php if ($key->status === 'active'): ?>
+                                            <span class="badge-modern badge-active">Active</span>
+                                        <?php else: ?>
+                                            <span class="badge-modern badge-revoked">Revoked</span>
+                                        <?php endif; ?>
+                                    </td>
+
+                                    <td>
+                                        <?= !empty($key->created_at)
+                                            ? html_escape(date('M j, Y h:i A', strtotime($key->created_at)))
+                                            : '<span class="muted-na">N/A</span>'; ?>
+                                    </td>
+
+                                    <td>
+                                        <?= !empty($key->revoked_at)
+                                            ? html_escape(date('M j, Y h:i A', strtotime($key->revoked_at)))
+                                            : '<span class="muted-na">N/A</span>'; ?>
+                                    </td>
+
+                                    <td>
+                                        <?php if ($key->status === 'active'): ?>
+                                            <a
+                                                href="<?= site_url('developer/revoke/' . (int) $key->id) ?>"
+                                                class="btn-danger-modern"
+                                                onclick="return confirm('Are you sure you want to revoke this key? Any applications using it will lose access immediately.');"
+                                            >
+                                                Revoke
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="muted-na">N/A</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <p class="empty-text">You have not generated any API keys yet.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <div class="card-inner">
+            <h2 class="section-title">Recent API Usage Logs</h2>
+
+            <p class="section-desc">
+                Track when and how your API keys are being used by third-party clients.
+            </p>
+
+            <?php if (!empty($logs)): ?>
+                <div class="table-responsive">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Endpoint Accessed</th>
+                                <th>IP Address</th>
+                                <th>Key Used</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($logs as $log): ?>
+                                <tr>
+                                    <td>
+                                        <?= !empty($log->accessed_at)
+                                            ? html_escape(date('M j, Y h:i:s A', strtotime($log->accessed_at)))
+                                            : '<span class="muted-na">N/A</span>'; ?>
+                                    </td>
+
+                                    <td>
+                                        <span class="endpoint-code">
+                                            <?= html_escape($log->endpoint); ?>
+                                        </span>
+                                    </td>
+
+                                    <td><?= html_escape($log->ip_address); ?></td>
+
+                                    <td>
+                                        <?php if (!empty($log->api_key)): ?>
+                                            <?= html_escape(substr($log->api_key, 0, 12)); ?>...
+                                        <?php else: ?>
+                                            <span class="muted-na">N/A</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <p class="empty-text">No API activity recorded yet.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>
