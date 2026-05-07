@@ -1,13 +1,36 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+$role = $this->session->userdata('role') ?: 'alumnus';
+
+$firstName = trim((string) $this->session->userdata('first_name'));
+$lastName  = trim((string) $this->session->userdata('last_name'));
+$fullName  = trim($firstName . ' ' . $lastName);
+
+if ($fullName === '') {
+    $fullName = 'User';
+}
+
+$isAlumnus = ($role === 'alumnus');
+$isStaff   = in_array($role, ['developer', 'admin'], true);
+
+$pageTitle = isset($title) && trim((string) $title) !== ''
+    ? $title
+    : 'Alumni Dashboard';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= html_escape($title) ?></title>
+    <title><?= html_escape($pageTitle); ?></title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
 
     <style>
         :root {
@@ -19,8 +42,9 @@
             --muted: #94a3b8;
             --primary: #6366f1;
             --primary-2: #8b5cf6;
-            --success: #10b981;
             --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
             --shadow: 0 20px 60px rgba(0,0,0,0.35);
         }
 
@@ -68,8 +92,13 @@
         }
 
         @keyframes floatGlow {
-            from { transform: translateY(0) translateX(0) scale(1); }
-            to { transform: translateY(25px) translateX(15px) scale(1.08); }
+            from {
+                transform: translateY(0) translateX(0) scale(1);
+            }
+
+            to {
+                transform: translateY(25px) translateX(15px) scale(1.08);
+            }
         }
 
         .page {
@@ -99,6 +128,7 @@
                 opacity: 0;
                 transform: translateY(22px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -142,12 +172,6 @@
             font-size: 0.92rem;
             font-weight: 600;
             white-space: nowrap;
-            animation: pulseSoft 2.5s infinite;
-        }
-
-        @keyframes pulseSoft {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0.15); }
-            50% { box-shadow: 0 0 0 10px rgba(99,102,241,0); }
         }
 
         .hero-panel {
@@ -192,12 +216,6 @@
             background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255,255,255,0.08);
             min-width: 130px;
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .stat-chip:hover {
-            transform: translateY(-4px);
-            border-color: rgba(255,255,255,0.18);
         }
 
         .stat-chip strong {
@@ -255,6 +273,7 @@
             transform: translateY(-8px) scale(1.01);
             border-color: rgba(255,255,255,0.22);
             box-shadow: 0 24px 44px rgba(0,0,0,0.28);
+            color: var(--text);
         }
 
         .card:hover::before {
@@ -338,12 +357,21 @@
             border-radius: 14px;
             font-weight: 700;
             box-shadow: 0 12px 24px rgba(239,68,68,0.26);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            transition: 0.25s ease;
         }
 
         .logout-btn:hover {
+            color: white;
             transform: translateY(-2px);
-            box-shadow: 0 16px 28px rgba(239,68,68,0.34);
+        }
+
+        .role-warning {
+            background: rgba(245,158,11,0.16);
+            border: 1px solid rgba(245,158,11,0.32);
+            color: #fde68a;
+            border-radius: 18px;
+            padding: 18px;
+            line-height: 1.65;
         }
 
         @media (max-width: 900px) {
@@ -376,113 +404,231 @@
         }
     </style>
 </head>
+
 <body>
 
-    <div class="page">
-        <div class="dashboard-container">
+<div class="page">
+    <div class="dashboard-container">
 
-            <div class="topbar">
-                <div class="heading">
-                    <h1>
-                        Welcome, <?= html_escape($this->session->userdata('first_name') . ' ' . $this->session->userdata('last_name')) ?>!
-                    </h1>
-                    <p class="welcome-text">
-                        This is your central Alumni Dashboard. From here you can manage your public profile,
-                        participate in the bidding system, and manage developer API keys with a clean, modern experience.
-                    </p>
-                </div>
-                <div class="badge">Alumni Portal</div>
+        <div class="topbar">
+            <div class="heading">
+                <h1>
+                    Welcome, <?= html_escape($fullName); ?>!
+                </h1>
+
+                <p class="welcome-text">
+                    This is your central dashboard. It shows only the modules available for your account role,
+                    helping you navigate the platform without broken or forbidden links.
+                </p>
             </div>
 
-            <div class="hero-panel">
-                <div class="hero-card">
-                    <h2>Your Control Center</h2>
-                    <p>
-                        Access all major alumni services from one place. Keep your profile updated,
-                        explore alumni bidding opportunities, and manage your developer API access.
-                    </p>
+            <div class="badge">
+                <?= html_escape(ucfirst($role)); ?> Portal
+            </div>
+        </div>
 
-                    <div class="quick-stats">
-                        <div class="stat-chip">
-                            <strong>4</strong>
-                            <span>Core Modules</span>
-                        </div>
-                        <div class="stat-chip">
-                            <strong>Secure</strong>
-                            <span>User Access</span>
-                        </div>
-                        <div class="stat-chip">
-                            <strong>Live</strong>
-                            <span>API Tools</span>
-                        </div>
-                    </div>
-                </div>
+        <div class="hero-panel">
+            <div class="hero-card">
+                <h2>Your Control Center</h2>
 
-                <div class="info-card">
-                    <h3>Quick Access</h3>
+                <?php if ($isAlumnus): ?>
                     <p>
-                        Use the action cards below to move through your dashboard smoothly.
-                        Each module is designed for fast navigation and clear task management.
+                        Manage your alumni profile, participate in blind bidding, check your bid status,
+                        view your bidding history, and see the current Alumni of the Day.
                     </p>
+                <?php elseif ($isStaff): ?>
+                    <p>
+                        Access the University Analytics Dashboard, view filtered alumni data, generate reports,
+                        manage scoped API keys, review usage logs, and open API documentation.
+                    </p>
+                <?php else: ?>
+                    <p>
+                        Your account role is not fully configured. Please contact an administrator if you cannot
+                        access the correct dashboard tools.
+                    </p>
+                <?php endif; ?>
+
+                <div class="quick-stats">
+                    <?php if ($isAlumnus): ?>
+                        <div class="stat-chip">
+                            <strong>Profile</strong>
+                            <span>Alumni data</span>
+                        </div>
+
+                        <div class="stat-chip">
+                            <strong>Bidding</strong>
+                            <span>Featured slot</span>
+                        </div>
+
+                        <div class="stat-chip">
+                            <strong>Status</strong>
+                            <span>Winning/Losing</span>
+                        </div>
+                    <?php elseif ($isStaff): ?>
+                        <div class="stat-chip">
+                            <strong>Analytics</strong>
+                            <span>Charts & trends</span>
+                        </div>
+
+                        <div class="stat-chip">
+                            <strong>Reports</strong>
+                            <span>CSV/PDF exports</span>
+                        </div>
+
+                        <div class="stat-chip">
+                            <strong>API</strong>
+                            <span>Keys & logs</span>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
-            <div class="action-cards">
-                <a href="<?= site_url('profile/index') ?>" class="card">
+            <div class="info-card">
+                <h3>Quick Access</h3>
+                <p>
+                    Use the cards below to open each module. Alumni and staff users see different options
+                    based on role-based access control.
+                </p>
+            </div>
+        </div>
+
+        <?php if (!$isAlumnus && !$isStaff): ?>
+            <div class="role-warning">
+                No dashboard modules are available for your current role:
+                <strong><?= html_escape($role); ?></strong>.
+                Please ask an administrator to assign a valid role.
+            </div>
+        <?php endif; ?>
+
+        <div class="action-cards">
+
+            <?php if ($isAlumnus): ?>
+                <a href="<?= site_url('profile'); ?>" class="card">
                     <div class="card-content">
                         <div class="card-icon">👤</div>
                         <span class="card-title">Manage Profile</span>
                         <span class="card-desc">
-                            Update your education, certifications, licences, courses, and employment history.
+                            Update your biography, LinkedIn URL, profile image, degrees, certifications,
+                            licences, courses, and employment history.
                         </span>
-                        <span class="card-arrow">Open Module →</span>
+                        <span class="card-arrow">Open Profile →</span>
                     </div>
                 </a>
 
-                <a href="<?= site_url('bidding/index') ?>" class="card">
+                <a href="<?= site_url('bidding'); ?>" class="card">
                     <div class="card-content">
                         <div class="card-icon">🏆</div>
                         <span class="card-title">Bidding System</span>
                         <span class="card-desc">
-                            Participate in the Alumni of the Day bidding process with a more engaging dashboard experience.
+                            Place or increase a blind bid for tomorrow’s Alumni of the Day featured slot.
                         </span>
-                        <span class="card-arrow">Open Module →</span>
+                        <span class="card-arrow">Open Bidding →</span>
                     </div>
                 </a>
 
-                <a href="<?= site_url('developer/index') ?>" class="card">
+                <a href="<?= site_url('bidding/my-status'); ?>" class="card">
+                    <div class="card-content">
+                        <div class="card-icon">📍</div>
+                        <span class="card-title">My Bid Status</span>
+                        <span class="card-desc">
+                            Check whether your active bid is currently winning or losing without seeing other bid amounts.
+                        </span>
+                        <span class="card-arrow">Check Status →</span>
+                    </div>
+                </a>
+
+                <a href="<?= site_url('bidding/history'); ?>" class="card">
+                    <div class="card-content">
+                        <div class="card-icon">📜</div>
+                        <span class="card-title">Bidding History</span>
+                        <span class="card-desc">
+                            Review your previous bid records, target dates, amounts, and final results.
+                        </span>
+                        <span class="card-arrow">View History →</span>
+                    </div>
+                </a>
+
+                <a href="<?= site_url('featured-today'); ?>" class="card">
+                    <div class="card-content">
+                        <div class="card-icon">⭐</div>
+                        <span class="card-title">Featured Today</span>
+                        <span class="card-desc">
+                            View the current Alumni of the Day profile that is visible to students and clients.
+                        </span>
+                        <span class="card-arrow">View Featured →</span>
+                    </div>
+                </a>
+            <?php endif; ?>
+
+            <?php if ($isStaff): ?>
+                <a href="<?= site_url('analytics/dashboard'); ?>" class="card">
+                    <div class="card-content">
+                        <div class="card-icon">📊</div>
+                        <span class="card-title">Analytics Dashboard</span>
+                        <span class="card-desc">
+                            View charts, skills gap signals, alumni outcomes, trends, filters, and visual insights.
+                        </span>
+                        <span class="card-arrow">Open Analytics →</span>
+                    </div>
+                </a>
+
+                <a href="<?= site_url('analytics/alumni'); ?>" class="card">
+                    <div class="card-content">
+                        <div class="card-icon">🎓</div>
+                        <span class="card-title">View Alumni</span>
+                        <span class="card-desc">
+                            Browse and filter alumni records by programme, graduation year, and industry sector.
+                        </span>
+                        <span class="card-arrow">View Alumni →</span>
+                    </div>
+                </a>
+
+                <a href="<?= site_url('analytics/reports'); ?>" class="card">
+                    <div class="card-content">
+                        <div class="card-icon">📝</div>
+                        <span class="card-title">Reports</span>
+                        <span class="card-desc">
+                            Generate curriculum intelligence reports and export alumni or summary data.
+                        </span>
+                        <span class="card-arrow">Open Reports →</span>
+                    </div>
+                </a>
+
+                <a href="<?= site_url('developer'); ?>" class="card">
                     <div class="card-content">
                         <div class="card-icon">🔑</div>
                         <span class="card-title">API Keys & Logs</span>
                         <span class="card-desc">
-                            Manage your API keys and review usage logs for connected third-party systems.
+                            Generate scoped API keys for Analytics Dashboard or Mobile AR App and review usage logs.
                         </span>
-                        <span class="card-arrow">Open Module →</span>
+                        <span class="card-arrow">Manage API →</span>
                     </div>
                 </a>
 
-                <a href="<?= site_url('api/docs') ?>" class="card" target="_blank">
+                <a href="<?= site_url('api-docs'); ?>" class="card" target="_blank" rel="noopener noreferrer">
                     <div class="card-content">
                         <div class="card-icon">📘</div>
                         <span class="card-title">API Documentation</span>
                         <span class="card-desc">
-                            Open the Swagger UI documentation and review how the AR client connects to your system.
+                            Open API documentation and review how external clients connect using bearer tokens.
                         </span>
                         <span class="card-arrow">View Docs →</span>
                     </div>
                 </a>
-            </div>
-
-            <div class="footer-bar">
-                <div class="footer-note">
-                    Logged in to the alumni management environment.
-                </div>
-
-                <a href="<?= site_url('auth/logout') ?>" class="logout-btn">Log Out</a>
-            </div>
+            <?php endif; ?>
 
         </div>
+
+        <div class="footer-bar">
+            <div class="footer-note">
+                Logged in as <?= html_escape($role); ?>.
+            </div>
+
+            <a href="<?= site_url('logout'); ?>" class="logout-btn">Log Out</a>
+        </div>
+
     </div>
+</div>
 
 </body>
 </html>

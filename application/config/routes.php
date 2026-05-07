@@ -25,8 +25,28 @@ $route['dashboard'] = 'auth/dashboard';
 |--------------------------------------------------------------------------
 */
 $route['profile'] = 'profile/index';
-$route['profile/save'] = 'profile/save';
-$route['profile/delete/(:num)/(:any)'] = 'profile/delete/$1/$2';
+$route['profile/index'] = 'profile/index';
+$route['profile/update-basic'] = 'profile/update_basic';
+
+$route['profile/degrees/add'] = 'profile/add_degree';
+$route['profile/degrees/edit/(:num)'] = 'profile/edit_degree/$1';
+$route['profile/degrees/delete/(:num)'] = 'profile/delete_degree/$1';
+
+$route['profile/certifications/add'] = 'profile/add_certification';
+$route['profile/certifications/edit/(:num)'] = 'profile/edit_certification/$1';
+$route['profile/certifications/delete/(:num)'] = 'profile/delete_certification/$1';
+
+$route['profile/licences/add'] = 'profile/add_licence';
+$route['profile/licences/edit/(:num)'] = 'profile/edit_licence/$1';
+$route['profile/licences/delete/(:num)'] = 'profile/delete_licence/$1';
+
+$route['profile/courses/add'] = 'profile/add_course';
+$route['profile/courses/edit/(:num)'] = 'profile/edit_course/$1';
+$route['profile/courses/delete/(:num)'] = 'profile/delete_course/$1';
+
+$route['profile/employment/add'] = 'profile/add_employment';
+$route['profile/employment/edit/(:num)'] = 'profile/edit_employment/$1';
+$route['profile/employment/delete/(:num)'] = 'profile/delete_employment/$1';
 
 /*
 |--------------------------------------------------------------------------
@@ -51,13 +71,50 @@ $route['developer/revoke/(:num)'] = 'developer/revoke/$1';
 
 /*
 |--------------------------------------------------------------------------
-| Public API Routes
+| API Documentation
 |--------------------------------------------------------------------------
 */
 $route['api-docs'] = 'api/docs';
+$route['api/docs'] = 'api/docs';
+
+/*
+|--------------------------------------------------------------------------
+| Public API Routes
+|--------------------------------------------------------------------------
+*/
 $route['api/featured-today'] = 'api/alumni_of_the_day';
 $route['api/alumni-of-the-day'] = 'api/alumni_of_the_day';
 $route['api/alumni_of_the_day'] = 'api/alumni_of_the_day';
+
+$route['api/alumni'] = 'api/alumni';
+
+$route['api/analytics/filters'] = 'api/analytics_filters';
+$route['api/analytics/summary'] = 'api/analytics_summary';
+$route['api/analytics/full'] = 'api/analytics_full';
+
+$route['api/analytics/industry-distribution'] = 'api/analytics_industry_distribution';
+$route['api/analytics/graduation-years'] = 'api/analytics_graduation_years';
+$route['api/analytics/job-titles'] = 'api/analytics_job_titles';
+$route['api/analytics/top-employers'] = 'api/analytics_top_employers';
+$route['api/analytics/geographic-distribution'] = 'api/analytics_geographic_distribution';
+$route['api/analytics/certification-trends'] = 'api/analytics_certification_trends';
+$route['api/analytics/course-trends'] = 'api/analytics_course_trends';
+$route['api/analytics/skills-gap'] = 'api/analytics_skills_gap';
+$route['api/analytics/top-certifications'] = 'api/analytics_top_certifications';
+$route['api/analytics/top-courses'] = 'api/analytics_top_courses';
+
+/*
+|--------------------------------------------------------------------------
+| Analytics Web Dashboard Routes
+|--------------------------------------------------------------------------
+*/
+$route['analytics'] = 'analytics/dashboard';
+$route['analytics/dashboard'] = 'analytics/dashboard';
+$route['analytics/alumni'] = 'analytics/alumni';
+$route['analytics/reports'] = 'analytics/reports';
+$route['analytics/export-csv'] = 'analytics/export_csv';
+$route['analytics/export-summary-csv'] = 'analytics/export_summary_csv';
+$route['analytics/chart-data'] = 'analytics/chart_data';
 
 /*
 |--------------------------------------------------------------------------
