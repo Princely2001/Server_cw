@@ -7,12 +7,7 @@ class Api_model extends CI_Model
     private $logs_table = 'api_logs';
 
     /*
-    |--------------------------------------------------------------------------
     | Get API Keys for Developer Dashboard
-    |--------------------------------------------------------------------------
-    | Important:
-    | Do not select or expose the raw api_key column.
-    | The full API key should only ever be shown once, immediately after generation.
     */
     public function get_user_keys($user_id)
     {
@@ -36,23 +31,6 @@ class Api_model extends CI_Model
             ->result();
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Generate API Key
-    |--------------------------------------------------------------------------
-    | Client type options:
-    | ar_app, analytics_dashboard, general
-    |
-    | Permissions:
-    | ar_app              => ["read:alumni_of_day"]
-    | analytics_dashboard => ["read:alumni", "read:analytics"]
-    | general             => all read permissions
-    |
-    | Security:
-    | - Generates a cryptographically secure API key.
-    | - Stores only SHA-256 hash and safe prefix.
-    | - Returns the full key once for display.
-    */
     public function generate_key($user_id, $client_type = 'ar_app', $client_name = null)
     {
         $user_id = (int) $user_id;
@@ -94,10 +72,9 @@ class Api_model extends CI_Model
          * api_key is intentionally set to NULL.
          * If your database does not allow NULL for api_key, run the SQL shown below this code.
          */
-        $data = [
+         $data = [
             'user_id'     => $user_id,
             'client_name' => $client_name,
-            'api_key'     => null,
             'status'      => 'active',
             'permissions' => json_encode($permissions),
             'created_at'  => date('Y-m-d H:i:s'),
@@ -125,9 +102,7 @@ class Api_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Permissions for Client Type
-    |--------------------------------------------------------------------------
     */
     private function get_permissions_for_client_type($client_type)
     {
@@ -145,9 +120,7 @@ class Api_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Default Client Name
-    |--------------------------------------------------------------------------
     */
     private function get_client_name_for_type($client_type)
     {
@@ -165,9 +138,7 @@ class Api_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Revoke API Key
-    |--------------------------------------------------------------------------
     */
     public function revoke_key($key_id, $user_id)
     {
@@ -187,11 +158,7 @@ class Api_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Get Usage Logs for Developer Dashboard
-    |--------------------------------------------------------------------------
-    | Important:
-    | Do not select api_keys.api_key.
     */
     public function get_usage_logs($user_id)
     {
@@ -219,13 +186,7 @@ class Api_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Validate Bearer Token
-    |--------------------------------------------------------------------------
-    | Secure validation:
-    | - The incoming bearer token is hashed.
-    | - The hash is compared against key_hash.
-    | - The raw API key is never searched or stored.
     */
     public function is_valid_key($api_key)
     {
@@ -266,9 +227,7 @@ class Api_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Permission Check Helper
-    |--------------------------------------------------------------------------
     */
     public function key_has_permission($key_record, $required_permission)
     {
@@ -294,14 +253,7 @@ class Api_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Log API Request
-    |--------------------------------------------------------------------------
-    | Compatible with old calls:
-    | log_request($key_id, $endpoint, $ip_address)
-    |
-    | Compatible with new calls:
-    | log_request($key_id, $endpoint, $ip_address, $method, $status_code, $user_agent)
     */
     public function log_request($key_id, $endpoint, $ip_address, $method = 'GET', $status_code = 200, $user_agent = null)
     {
@@ -325,9 +277,7 @@ class Api_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Count Recent Requests by IP
-    |--------------------------------------------------------------------------
     */
     public function count_recent_requests_by_ip($ip_address, $minutes = 60)
     {
@@ -349,9 +299,7 @@ class Api_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Count Active API Keys
-    |--------------------------------------------------------------------------
     */
     public function count_active_keys($user_id)
     {

@@ -12,9 +12,7 @@ class Analytics extends CI_Controller
         date_default_timezone_set($this->app_timezone);
 
         /*
-        |--------------------------------------------------------------------------
         | Security Headers
-        |--------------------------------------------------------------------------
         */
         $this->output->set_header('X-Content-Type-Options: nosniff');
         $this->output->set_header('X-Frame-Options: SAMEORIGIN');
@@ -30,10 +28,7 @@ class Analytics extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Access Guard
-    |--------------------------------------------------------------------------
-    | Analytics dashboard is for developers/admin users only.
     */
     private function require_developer()
     {
@@ -51,9 +46,7 @@ class Analytics extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Filter Helper
-    |--------------------------------------------------------------------------
     */
     private function get_filters()
     {
@@ -75,9 +68,7 @@ class Analytics extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Main Analytics Dashboard
-    |--------------------------------------------------------------------------
     */
     public function dashboard()
     {
@@ -99,9 +90,7 @@ class Analytics extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Alumni List Page
-    |--------------------------------------------------------------------------
     */
     public function alumni()
     {
@@ -136,9 +125,7 @@ class Analytics extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Reports Page
-    |--------------------------------------------------------------------------
     */
     public function reports()
     {
@@ -160,9 +147,7 @@ class Analytics extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Export Filtered Alumni to CSV
-    |--------------------------------------------------------------------------
     */
     public function export_csv()
     {
@@ -199,9 +184,7 @@ class Analytics extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Export Analytics Summary to CSV
-    |--------------------------------------------------------------------------
     */
     public function export_summary_csv()
     {
@@ -263,10 +246,7 @@ class Analytics extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | JSON endpoint for dashboard pages without using API token
-    |--------------------------------------------------------------------------
-    | This is session-protected for the internal web dashboard.
     */
     public function chart_data()
     {

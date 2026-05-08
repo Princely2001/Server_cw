@@ -10,9 +10,7 @@ class Api extends CI_Controller
         parent::__construct();
 
         /*
-        |--------------------------------------------------------------------------
         | API Security Headers
-        |--------------------------------------------------------------------------
         */
         $allowed_origins = [
             'http://localhost',
@@ -145,9 +143,7 @@ class Api extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | API Key + Permission Guard
-    |--------------------------------------------------------------------------
     */
     private function require_api_permission($required_permission)
     {
@@ -218,10 +214,7 @@ class Api extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Public API: Alumni of the Day
-    |--------------------------------------------------------------------------
-    | Required permission: read:alumni_of_day
     */
     public function alumni_of_the_day()
     {
@@ -272,10 +265,7 @@ class Api extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | API: Alumni List
-    |--------------------------------------------------------------------------
-    | Required permission: read:alumni
     */
     public function alumni()
     {
@@ -316,10 +306,7 @@ class Api extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | API: Filter Options
-    |--------------------------------------------------------------------------
-    | Required permission: read:analytics
     */
     public function analytics_filters()
     {
@@ -338,10 +325,7 @@ class Api extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | API: Analytics Summary
-    |--------------------------------------------------------------------------
-    | Required permission: read:analytics
     */
     public function analytics_summary()
     {
@@ -364,10 +348,7 @@ class Api extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | API: Full Analytics Payload
-    |--------------------------------------------------------------------------
-    | Required permission: read:analytics
     */
     public function analytics_full()
     {
@@ -389,9 +370,7 @@ class Api extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Individual Chart Endpoints
-    |--------------------------------------------------------------------------
     */
 
     public function analytics_industry_distribution()

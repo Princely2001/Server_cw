@@ -13,13 +13,7 @@ class Analytics_model extends CI_Model
     private $bids_table = 'alumni_bids';
 
     /*
-    |--------------------------------------------------------------------------
     | Filter Helper
-    |--------------------------------------------------------------------------
-    | Supported filters:
-    | programme
-    | graduation_year
-    | industry_sector
     */
     private function apply_profile_filters($filters = [])
     {
@@ -52,9 +46,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Filter Dropdown Data
-    |--------------------------------------------------------------------------
     */
     public function get_filter_options()
     {
@@ -92,9 +84,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Summary Cards
-    |--------------------------------------------------------------------------
     */
     public function get_summary_stats($filters = [])
     {
@@ -233,9 +223,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Alumni List
-    |--------------------------------------------------------------------------
     */
     public function get_alumni_list($filters = [], $limit = 100, $offset = 0)
     {
@@ -285,9 +273,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Chart 1: Industry Distribution
-    |--------------------------------------------------------------------------
     */
     public function get_industry_distribution($filters = [])
     {
@@ -307,9 +293,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Chart 2: Graduation Year Distribution
-    |--------------------------------------------------------------------------
     */
     public function get_graduation_year_distribution($filters = [])
     {
@@ -328,9 +312,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Chart 3: Most Common Job Titles
-    |--------------------------------------------------------------------------
     */
     public function get_job_title_distribution($filters = [], $limit = 10)
     {
@@ -351,9 +333,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Chart 4: Top Employers
-    |--------------------------------------------------------------------------
     */
     public function get_top_employers($filters = [], $limit = 10)
     {
@@ -374,9 +354,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Chart 5: Geographic Distribution
-    |--------------------------------------------------------------------------
     */
     public function get_geographic_distribution($filters = [])
     {
@@ -405,9 +383,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Chart 6: Certification Trends
-    |--------------------------------------------------------------------------
     */
     public function get_certification_trends($filters = [])
     {
@@ -427,9 +403,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Chart 7: Professional Course Trends
-    |--------------------------------------------------------------------------
     */
     public function get_course_trends($filters = [])
     {
@@ -449,10 +423,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Chart 8: Skills Gap / Professional Development Radar
-    |--------------------------------------------------------------------------
-    | This groups certifications and courses into skill categories.
     */
     public function get_skills_gap_data($filters = [])
     {
@@ -589,9 +560,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Most Common Certifications / Courses
-    |--------------------------------------------------------------------------
     */
     public function get_top_certifications($filters = [], $limit = 10)
     {
@@ -628,9 +597,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Featured Alumni / Bidding Analytics
-    |--------------------------------------------------------------------------
     */
     public function get_featured_alumni_count_by_month($filters = [])
     {
@@ -650,9 +617,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | CSV Export Data
-    |--------------------------------------------------------------------------
     */
     public function get_alumni_export_rows($filters = [])
     {
@@ -684,10 +649,7 @@ class Analytics_model extends CI_Model
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Full Analytics Payload
-    |--------------------------------------------------------------------------
-    | Useful for one API endpoint returning everything for Chart.js.
     */
     public function get_full_analytics_payload($filters = [])
     {

@@ -8,12 +8,7 @@ class Developer extends CI_Controller
         parent::__construct();
 
         /*
-        |--------------------------------------------------------------------------
         | Access Control
-        |--------------------------------------------------------------------------
-        | API key management is available to developer/admin users only.
-        | This matches the Analytics controller, where both developer and admin
-        | users are allowed to access dashboard/reporting pages.
         */
         $this->load->library(['session', 'form_validation']);
 
@@ -32,9 +27,7 @@ class Developer extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Role Helper
-    |--------------------------------------------------------------------------
     */
     private function is_allowed_role()
     {
@@ -42,9 +35,7 @@ class Developer extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Current User Helper
-    |--------------------------------------------------------------------------
     */
     private function current_user_id()
     {
@@ -52,9 +43,7 @@ class Developer extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Redirect Helper
-    |--------------------------------------------------------------------------
     */
     private function redirect_dashboard()
     {
@@ -63,9 +52,7 @@ class Developer extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Developer/Admin API Dashboard
-    |--------------------------------------------------------------------------
     */
     public function index()
     {
@@ -76,10 +63,7 @@ class Developer extends CI_Controller
         $data['logs'] = $this->Api_model->get_usage_logs($user_id);
 
         /*
-        |--------------------------------------------------------------------------
         | API Client Types
-        |--------------------------------------------------------------------------
-        | Used by the dashboard form dropdown.
         */
         $data['client_types'] = [
             'ar_app' => [
@@ -100,9 +84,7 @@ class Developer extends CI_Controller
         ];
 
         /*
-        |--------------------------------------------------------------------------
         | Show Generated Key Once
-        |--------------------------------------------------------------------------
         */
         $data['new_api_key'] = $this->session->flashdata('new_api_key');
         $data['new_key_client_name'] = $this->session->flashdata('new_key_client_name');
@@ -113,9 +95,7 @@ class Developer extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Generate API Key
-    |--------------------------------------------------------------------------
     */
     public function generate()
     {
@@ -150,9 +130,7 @@ class Developer extends CI_Controller
         $client_name = trim((string) $this->input->post('client_name', TRUE));
 
         /*
-        |--------------------------------------------------------------------------
         | Limit Active Keys
-        |--------------------------------------------------------------------------
         */
         $active_key_count = (int) $this->Api_model->count_active_keys($user_id);
 
@@ -177,9 +155,7 @@ class Developer extends CI_Controller
         }
 
         /*
-        |--------------------------------------------------------------------------
         | Show Key Once
-        |--------------------------------------------------------------------------
         */
         $permissions = [];
 
@@ -201,9 +177,7 @@ class Developer extends CI_Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
     | Revoke API Key
-    |--------------------------------------------------------------------------
     */
     public function revoke($key_id = null)
     {

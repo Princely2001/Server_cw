@@ -6,9 +6,8 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 /*
-|--------------------------------------------------------------------------
 | Authentication Routes
-|--------------------------------------------------------------------------
+
 */
 $route['login'] = 'auth/login';
 $route['logout'] = 'auth/logout';
@@ -20,9 +19,7 @@ $route['auth/verify'] = 'auth/verify';
 $route['dashboard'] = 'auth/dashboard';
 
 /*
-|--------------------------------------------------------------------------
 | Alumni Profile Routes
-|--------------------------------------------------------------------------
 */
 $route['profile'] = 'profile/index';
 $route['profile/index'] = 'profile/index';
@@ -49,9 +46,7 @@ $route['profile/employment/edit/(:num)'] = 'profile/edit_employment/$1';
 $route['profile/employment/delete/(:num)'] = 'profile/delete_employment/$1';
 
 /*
-|--------------------------------------------------------------------------
 | Bidding Routes
-|--------------------------------------------------------------------------
 */
 $route['bidding'] = 'bidding/index';
 $route['bidding/submit'] = 'bidding/submit_bid';
@@ -60,9 +55,7 @@ $route['bidding/history'] = 'bidding/history';
 $route['featured-today'] = 'bidding/featured_today';
 
 /*
-|--------------------------------------------------------------------------
 | Developer API Key Routes
-|--------------------------------------------------------------------------
 */
 $route['developer'] = 'developer/index';
 $route['developer/index'] = 'developer/index';
@@ -70,17 +63,13 @@ $route['developer/generate'] = 'developer/generate';
 $route['developer/revoke/(:num)'] = 'developer/revoke/$1';
 
 /*
-|--------------------------------------------------------------------------
 | API Documentation
-|--------------------------------------------------------------------------
 */
 $route['api-docs'] = 'api/docs';
 $route['api/docs'] = 'api/docs';
 
 /*
-|--------------------------------------------------------------------------
 | Public API Routes
-|--------------------------------------------------------------------------
 */
 $route['api/featured-today'] = 'api/alumni_of_the_day';
 $route['api/alumni-of-the-day'] = 'api/alumni_of_the_day';
@@ -104,9 +93,7 @@ $route['api/analytics/top-certifications'] = 'api/analytics_top_certifications';
 $route['api/analytics/top-courses'] = 'api/analytics_top_courses';
 
 /*
-|--------------------------------------------------------------------------
 | Analytics Web Dashboard Routes
-|--------------------------------------------------------------------------
 */
 $route['analytics'] = 'analytics/dashboard';
 $route['analytics/dashboard'] = 'analytics/dashboard';
@@ -117,8 +104,6 @@ $route['analytics/export-summary-csv'] = 'analytics/export_summary_csv';
 $route['analytics/chart-data'] = 'analytics/chart_data';
 
 /*
-|--------------------------------------------------------------------------
 | Cron Routes
-|--------------------------------------------------------------------------
 */
 $route['cron/resolve-winner'] = 'bidding/cron_resolve_winner';
